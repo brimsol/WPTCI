@@ -32,7 +32,7 @@ a img{
 	clear:both;
 }
 body{
-	background-color: #fff;
+	background-color: #E4E4E4;
 	color: #222222;
     font-family: Arial,Helvetica,sans-serif;
     font-size: 12px;
@@ -52,20 +52,19 @@ body{
 	font-size:0;
 }
 #container{
-	width:755px;
-    padding: 25px;
+	width:19cm;
+    padding: 0px 25px 25px 25px;
     background-color: #FFF;
 }
 #header_data {
-    overflow-x: hidden;
-    width: 510px;
+    
 }
 #header_data h2 {
-    margin: 0;
+    margin-top: 20px;
     font-weight: normal;
-    font-size: 2.5em;
+    font-size: 22px;
     line-height: 1em;
-    padding: 0.5em 0;
+	text-align:right;
 }
 .url {
     color: #000040;
@@ -146,45 +145,40 @@ table.pretty {
 </head>
 <body>
 
-<div id="header">
-    <h1 id="logo"><a href="#"><img src="<?php echo base_url('/assets/front'); ?>/img/logo.png" alt="Logo" />WebPageTest</a></h1>
-    <div class="clear"></div>
-</div>
+
 
 <table id="container" cellspacing="0" cellpadding="0">
 <tr>
 	<td>
+		<h1 id="logo"><a href="#"><img src="images/logo.png" alt="Logo" />WebPageTest</a></h1>
+	</td>
+	<td width="230px">
 		<div id="header_data">
-			<h2 class="alternate cufon-dincond_regular">Web Page Performance Test for<br>
-			<a href="http://google.com" title="http://google.com" rel="nofollow" class="url cufon-dincond_black">google.com</a></h2>
-			<p class="heading_details">
-				<strong>From:</strong> Dulles, VA - IE8 - <b>Cable</b><br>
-				<span date="1403238525" class="jsdate">6/20/2014, 9:58:45 AM</span><br>
-			</p>
+			<h2 class="alternate cufon-dincond_regular">Performance Report for<br>
+			<a href="http://google.com" title="http://google.com" rel="nofollow" class="url cufon-dincond_black">google.com</a>
+			</h2>
 		</div><!--header_data-->
 	</td>
+</tr>
+<tr>
+	<td colspan="2"><div id="test_results-container"></div></td>
 </tr>
 <tr>	
 	<td>
 		<table cellspacing="0" cellpadding="0" width="414px">
 		<tr>
-			<td colspan="6">
-				<div id="optimization_header">
-					<span id="headerPagespeedScore"><a href="#">PageSpeed 1.12 Score</a>: <b>98/100</b></span>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<td class="grades"><a href="#"><h2><img src="<?php echo base_url('/assets/front'); ?>/img/grade_a.jpg" alt="A"></h2></a>First Byte Time</td>
-			<td class="grades"><a href="#"><h2><img src="<?php echo base_url('/assets/front'); ?>/img/grade_b.jpg" alt="B"></h2></a>Keep-alive Enabled</td>
-			<td class="grades"><a href="#"><h2><img src="<?php echo base_url('/assets/front'); ?>/img/grade_c.jpg" alt="C"></h2></a>Compress Transfer</td>
-			<td class="grades"><a href="#"><h2><img src="<?php echo base_url('/assets/front'); ?>/img/grade_d.jpg" alt="D"></h2></a>Compress Images</td>
-			<td class="grades"><a href="#"><h2><img src="<?php echo base_url('/assets/front'); ?>/img/grade_f.jpg" alt="F"></h2></a>Cache static content</td>
-			<td class="grades"><a href="#"><h2><img src="<?php echo base_url('/assets/front'); ?>/img/na.jpg" alt="NA"></h2></a>Effective use of CDN</td>
+			<td class="grades"><a href="#"><h2><img src="images/grade_a.jpg" alt="A"></h2></a>First Byte Time</td>
+			<td class="grades"><a href="#"><h2><img src="images/grade_b.jpg" alt="B"></h2></a>Keep-alive Enabled</td>
+			<td class="grades"><a href="#"><h2><img src="images/grade_c.jpg" alt="C"></h2></a>Compress Transfer</td>
+			<td class="grades"><a href="#"><h2><img src="images/grade_d.jpg" alt="D"></h2></a>Compress Images</td>
+			<td class="grades"><a href="#"><h2><img src="images/grade_f.jpg" alt="F"></h2></a>Cache static content</td>
+			<td class="grades"><a href="#"><h2><img src="images/na.jpg" alt="NA"></h2></a>Effective use of CDN</td>
 		</tr>
 		</table>
 	</td>
-
+	<td>
+		<img src="images/sideimg.jpg" alt="Google" width="100%" height="100%" style="border:2px solid silver">
+	</td>
 </tr>
 	
 <tr>
@@ -244,7 +238,7 @@ table.pretty {
 	<td colspan="2"><div class="heading_text">Image</div></td>
 </tr>
 <tr>
-	<td colspan="2"><img src="<?php echo base_url('/assets/front'); ?>/img/sample.jpg" alt="Website" / class="full_image" width="20%" height="20%"></td>
+	<td colspan="2"><img src="images/sample.jpg" alt="Website" / class="full_image" width="100%" height="100%"></td>
 </tr>
 
 </table><!--container-->

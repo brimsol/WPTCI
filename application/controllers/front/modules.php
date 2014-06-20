@@ -21,7 +21,7 @@ class Modules extends CI_Controller {
         $this->user_type = $this->session->userdata('user_type');
 
         $this->output->enable_profiler(TRUE);
-        
+
         // Load the rest client spark
         //$this->load->spark('restclient/2.2.1');
         // Load the library
@@ -46,6 +46,10 @@ class Modules extends CI_Controller {
             } else {
                 $points = 0;
             }
+            
+            if (is_admin) {
+                $points = 1;
+            }
             if ($points < 1) {
 
                 $this->ci_alerts->set('error', 'Sorry you don\'t have enough points to continue');
@@ -59,7 +63,6 @@ class Modules extends CI_Controller {
                 //echo $this->points ;
                 $data['url'] = $url;
                 $this->load->view('front/scaning_view', $data);
-                
             }
         }
     }
@@ -171,12 +174,12 @@ class Modules extends CI_Controller {
     }
 
     function pdf() {
-        
-       $this->load->helper('dompdf');
+
+        $this->load->helper('dompdf');
         // page info here, db calls, etc.     
         $html = $this->load->view('front/print_view', '', true);
         pdf_create($html, 'filename');
-        
+
 //        $data = pdf_create($html, '', false);
 //        write_file('name', $data);
         //if you want to write it to disk and/or send it as an attachment    
