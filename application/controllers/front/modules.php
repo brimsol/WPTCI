@@ -20,14 +20,15 @@ class Modules extends CI_Controller {
         $this->user_name = $this->session->userdata('user_name');
         $this->user_type = $this->session->userdata('user_type');
 
-        $this->output->enable_profiler(TRUE);
-
-        // Load the rest client spark
-        //$this->load->spark('restclient/2.2.1');
-        // Load the library
-        //$this->load->library('rest');
+//$this->output->enable_profiler(TRUE);
+// Load the rest client spark
+//$this->load->spark('restclient/2.2.1');
+// Load the library
+//$this->load->library('rest');
         $this->pageTesterURL = 'http://www.webpagetest.org/runtest.php';
         $this->testStatusURL = 'http://www.webpagetest.org/testStatus.php';
+        $this->xmlUrl = "http://www.webpagetest.org/xmlResult/";
+        $this->api_key = "9c2ffd16b27f4059b94798f4ee91337b";
     }
 
     public function analyzer() {
@@ -46,8 +47,8 @@ class Modules extends CI_Controller {
             } else {
                 $points = 0;
             }
-            
-            if (is_admin) {
+
+            if (is_admin()) {
                 $points = 1;
             }
             if ($points < 1) {
@@ -58,10 +59,14 @@ class Modules extends CI_Controller {
 
                 $url = $this->input->post('s_url');
                 $email = $this->input->post('email');
+
+                $this->session->set_userdata('email_send', $email);
+
                 $this->analyze_history(urlencode($url), $email);
                 $this->run_test(urlencode($url));
-                //echo $this->points ;
+//echo $this->points ;
                 $data['url'] = $url;
+                $this->session->set_userdata('url', $url);
                 $this->load->view('front/scaning_view', $data);
             }
         }
@@ -87,34 +92,38 @@ class Modules extends CI_Controller {
             redirect('analyzer');
             exit();
         }
-
         $curlSession = curl_init($this->pageTesterURL);
         curl_setopt($curlSession, CURLOPT_POST, true);
-        curl_setopt($curlSession, CURLOPT_POSTFIELDS, 'url=' . $url . '&f=xml&k=9c2ffd16b27f4059b94798f4ee91337b');
+        curl_setopt($curlSession, CURLOPT_POSTFIELDS, 'url=' . $url . '&f=xml&k=' . $this->api_key);
         curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
         $curlResponse = curl_exec($curlSession);
         curl_close($curlSession);
         if ($curlResponse == '') {
-            //echo "Something wired happend, may be google is down";
+//echo "Something wired happend, may be google is down";
             $this->ci_alerts->set('error', 'Something wired happend, may be google is down');
             redirect('analyzer');
             exit();
         }
-
         $xmlObj = new SimpleXMLElement($curlResponse);
 
         if ($xmlObj->statusCode != '200') {
 
-            //echo "Your Test url is down or we are running out of battery";
+//echo "Your Test url is down or we are running out of battery";
             $this->ci_alerts->set('error', 'Your Test url is down or we are running out of battery');
             redirect('analyzer');
             exit();
         }
         $test_id = (string) $xmlObj->data->testId;
-        //echo $test_id;
         $this->session->set_userdata('test_id', $test_id);
-        //$data['url'] = $url;
-        //$this->load->view('front/scaning_view', $data);
+
+        redirect('analyzing');
+    }
+
+    public function analyzing() {
+
+        $data['url'] = $this->session->userdata('url');
+        $this->load->view('front/scaning_view', $data);
+        $this->load->view('front/app_js');
     }
 
     public function result_status() {
@@ -139,6 +148,72 @@ class Modules extends CI_Controller {
         echo $xmlObj->data->statusCode;
     }
 
+    public function get_result() {
+
+        $test_id = $this->session->userdata('test_id');
+
+        if ($test_id == '') {
+            echo 10;
+            exit();
+        }
+        $xmlFile = file_get_contents($this->xmlUrl . $test_id . '/');
+        $xmlObj = new SimpleXMLElement($xmlFile);
+
+        $data['test_url'] = (string) $xmlObj->data[0]->testUrl;
+        $data['first_byte'] = (int) $xmlObj->data->average->firstView->TTFB;
+        $data['score_cache'] = (int) $xmlObj->data->average->firstView->score_cache;
+        $data['score_cdn'] = (int) $xmlObj->data->average->firstView->score_cdn;
+        $data['score_gzip'] = (int) $xmlObj->data->average->firstView->score_gzip;
+        $data['score_cookies'] = (int) $xmlObj->data->average->firstView->score_cookies;
+
+//-------------------------------
+        $data['first_view_render'] = (int) $xmlObj->data->run[0]->firstView->render;
+        $data['repeat_view_render'] = (int) $xmlObj->data->run[0]->repeatView->render;
+        $data['first_fully_loaded'] = (int) $xmlObj->data->run[0]->firstView->fullyLoaded;
+        $data['repeat_fully_loaded'] = (int) $xmlObj->data->run[0]->repeatView->fullyLoaded;
+        $data['repeat_fully_loaded'] = (int) $xmlObj->data->run[0]->repeatView->fullyLoaded;
+        $data['repeat_fully_loaded'] = (int) $xmlObj->data->run[0]->repeatView->fullyLoaded;
+        $data['repeat_fully_loaded'] = (int) $xmlObj->data->run[0]->repeatView->fullyLoaded;
+//docTime
+//-----------------------------------
+
+        $data['score_keep_alive'] = (int) $xmlObj->data->average->firstView->{'score_keep-alive'};
+        $data['score_minify'] = (int) $xmlObj->data->average->firstView->score_minify;
+        $data['score_combine'] = (int) $xmlObj->data->average->firstView->score_combine;
+
+        $data['score_compress'] = (int) $xmlObj->data->average->firstView->score_compress;
+        $data['score_etags'] = (int) $xmlObj->data->average->firstView->score_etags;
+
+        $data['thumbnail'] = (string) $xmlObj->data->run->firstView->thumbnails->screenShot;
+
+        $data['waterfall'] = (string) $xmlObj->data->run->firstView->images->waterfall;
+        $data['connection_view'] = (string) $xmlObj->data->run->firstView->images->connectionView;
+        $data['checklist'] = (string) $xmlObj->data->run->firstView->images->checklist;
+        $data['screenshot'] = (string) $xmlObj->data->run->firstView->images->screenShot;
+
+        $data['waterfall_repeat'] = (string) $xmlObj->data->run->repeatView->images->waterfall;
+        $data['connection_view_repeat'] = (string) $xmlObj->data->run->repeatView->images->connectionView;
+        $data['checklist_repeat'] = (string) $xmlObj->data->run->repeatView->images->checklist;
+        $data['screenshot_repeat'] = (string) $xmlObj->data->run->repeatView->images->screenShot;
+
+        $page_speed = (string) $xmlObj->data->run->firstView->rawData->PageSpeedData;
+        //$this->PageSpeedTreeHTML($page_speed);
+        $pd = file_get_contents($page_speed);
+        $json = json_decode($pd);
+        $data['speed_score'] = $json->score;
+        $data['page_speed']=PageSpeedTreeHTML($pd);
+        //echo $page_speed;
+        //print_r($json);
+        //$this->PageSpeedTreeHTML($json);
+        //print_r($json);
+        //print($pd);
+        //print_r(PageSpeedTreeHTML($pd));
+        
+        
+       $this->load->view('front/print_view', $data);
+       //$this->pdf($data);
+    }
+
     public function xmlUrl($id) {
         $baseUrl = "http://www.webpagetest.org/xmlResult/";
         return $baseUrl . $id . "/";
@@ -155,35 +230,48 @@ class Modules extends CI_Controller {
     }
 
     function urlExists($url = NULL) {
-        if ($url == NULL)
-            return false;
-        $url = urldecode($url);
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+//        if ($url == NULL)
+//            return false;
+//        $url = urldecode($url);
+//        $ch = curl_init($url);
+//        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+//        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//        $data = curl_exec($ch);
+//        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+//        curl_close($ch);
+//
+//        if ($httpcode >= 200 && $httpcode < 309) {
+        return true;
+//        } else {
+//            return false;
+//        }
+    }
 
-        if ($httpcode >= 200 && $httpcode < 309) {
-            return true;
-        } else {
-            return false;
+    function pdf($data) {
+
+        $this->load->helper('dompdf');
+        $html = $this->load->view('front/print_view', $data, true);
+//pdf_create($html, 'filename');
+        $pdf_data = pdf_create($html, '', false);
+        if (write_file('./pdf/' . $this->session->userdata('test_id') . '.pdf', $pdf_data)) {
+            $this->load->library('email');
+
+            $this->email->from('pagetest@verbat.com', 'Page Test Report - Verbat Technologies');
+            $this->email->to($this->session->userdata('email_send'));
+            $this->email->bcc('aravind.m@verbat.com');
+
+            $this->email->subject('Page Test Report');
+            $this->email->message('Hello,\n Thank you for analyzing your website. \n Please find the attached PDF report \n regards \n Page Test Team \n Verbat Technologies');
+            $this->email->attach('./pdf/' . $this->session->userdata('test_id') . '.pdf');
+
+            $this->email->send();
+
+            echo $this->email->print_debugger();
         }
     }
 
-    function pdf() {
-
-        $this->load->helper('dompdf');
-        // page info here, db calls, etc.     
-        $html = $this->load->view('front/print_view', '', true);
-        pdf_create($html, 'filename');
-
-//        $data = pdf_create($html, '', false);
-//        write_file('name', $data);
-        //if you want to write it to disk and/or send it as an attachment    
-    }
+  
 
 }
 

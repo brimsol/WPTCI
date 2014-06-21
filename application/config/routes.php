@@ -62,6 +62,7 @@ $route['admin/reports'] = "admin/modules/reports";
 //Front End
 $route['login'] = "front/auth/login";
 $route['analyzer'] = "front/modules/analyzer";
+$route['analyzing'] = "front/modules/analyzing";
 $route['logout'] = "front/auth/logout";
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

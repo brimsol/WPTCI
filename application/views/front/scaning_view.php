@@ -10,7 +10,7 @@
     </div><!--screenshot-->
 
     <div id="analyze_text">
-        <h3>Analyzing your website</h3>
+        <h3 id="footer_notes">Analyzing your website</h3>
     </div>
 
 </div>

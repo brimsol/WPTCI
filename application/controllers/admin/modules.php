@@ -12,7 +12,7 @@ class Modules extends CI_Controller {
         if (!is_admin()) {
             redirect(site_url());
         }
-        $this->output->enable_profiler(TRUE);
+        //$this->output->enable_profiler(TRUE);
     }
 
     public function dashboard() {
