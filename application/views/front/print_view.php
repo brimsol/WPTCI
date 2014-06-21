@@ -292,17 +292,17 @@
                                 <th valign="middle" align="center">Bytes In</th>
                             </tr>
                             <tr>
-                                <td valign="middle" id="LoadTime">1.423s</td>
-                                <td valign="middle" id="TTFB">0.634s</td>
-                                <td valign="middle" id="startRender">0.965s</td>
-                                <td valign="middle" id="domElements">214</td>
+                                <td valign="middle" id="LoadTime"><?php echo round(milli_to_seconds($first_loadTime),2);?>s</td>
+                                <td valign="middle" id="TTFB"><?php echo round(($first_bytesOut/1024),2);?>KB</td>
+                                <td valign="middle" id="startRender"><?php echo round(milli_to_seconds($first_view_render),2);?>s</td>
+                                <td valign="middle" id="domElements"><?php echo $first_domElements;?></td>
                                 <td valign="middle" id="result">0</td>
-                                <td valign="middle" class="border" id="docComplete">1.423s</td>
-                                <td valign="middle" id="requestsDoc">10</td>
-                                <td valign="middle" id="bytesInDoc">247 KB</td>
-                                <td valign="middle" class="border" id="fullyLoaded">1.634s</td>
-                                <td valign="middle" id="requests">12</td>
-                                <td valign="middle" id="bytesIn">281 KB</td>
+                                <td valign="middle" class="border" id="docComplete"><?php echo round(milli_to_seconds($first_docTime),2);?>s</td>
+                                <td valign="middle" id="requestsDoc"><?php echo $first_requestsDoc;?></td>
+                                <td valign="middle" id="bytesInDoc"><?php echo round(($first_bytesInDoc/1024),2);?> KB</td>
+                                <td valign="middle" class="border" id="fullyLoaded"><?php echo round(milli_to_seconds($first_fullyLoaded),2);?></td>
+                                <td valign="middle" id="requests"><?php echo $first_requests;?></td>
+                                <td valign="middle" id="bytesIn"><?php echo  round(($first_bytesIn/1024),2);?> KB</td>
                             </tr>
                         </tbody>
                     </table>

@@ -31,38 +31,60 @@
             url: '<?php echo site_url('front/modules/get_result'); ?>',
             //data: {postVar1: 'theValue1', postVar2: 'theValue2'},
             beforeSend: function() {
-
+                $('#footer_notes').empty();
                 $('#footer_notes').text('Aggregating result data..');
-                
+
                 setTimeout(function() {
-                    $('#footer_notes').text('Populating report...');
+                    $('#footer_notes').empty();
+                    $('#footer_notes').text('Populating reports...');
                 }, 5000);
             },
             success: function(data) {
                 // successful request; do something with the data
+                if (data == 200) {
+                    $('#footer_notes').empty();
+                    $('#footer_notes').text('Report sent successfully, you will redirect to home');
 
-                status_checker(data)
+                    setTimeout(function() {
+                        redirect();
+                    }, 3000);
+                } else {
+                    $('#footer_notes').empty();
+                    $('#footer_notes').text('Sorry some error occured, you will redirect to home');
+
+                    setTimeout(function() {
+                        redirect();
+                    }, 3000);
+                }
+                //status_checker(data)
 
             },
             error: function() {
                 // failed request; give feedback to user
+                $('#footer_notes').empty();
                 $('#footer_notes').text('Lost connection with server, we are re-trying..');
             }
         });
+    }
+
+    function redirect() {
+        window.location.replace("<?php echo site_url(); ?>");
     }
 
     function status_checker(stat) {
 
         if (stat >= 100 && stat < 200) {
             $('#footer_notes').empty();
-            $('#footer_notes').text('still working on your request...');
+            $('#footer_notes').text('working on your request...');
             setTimeout(function() {
                 test_status();
             }, 5000);
-        }
-        else if (stat == 200) {
+        } else if (stat == 200) {
             $('#footer_notes').empty();
-            $('#footer_notes').text('Hurray! Test completed...');
+            $('#footer_notes').text('Aggregating result data..');
+            setTimeout(function() {
+                get_result();
+            }, 5000);
         }
         else if (stat >= 400) {
             $('#footer_notes').empty();
@@ -76,7 +98,7 @@
         } else if (stat == 20) {
             $('#footer_notes').empty();
             $('#footer_notes').text('Sorry some error occured, we are working on it.');
-        }else {
+        } else {
             $('#footer_notes').empty();
             $('#footer_notes').text('Sorry some error occured, we are working on it.');
         }

@@ -47,7 +47,7 @@ class Modules extends CI_Controller {
             } else {
                 $points = 0;
             }
-
+            $this->session->set_userdata('points', $points);
             if (is_admin()) {
                 $points = 1;
             }
@@ -72,8 +72,9 @@ class Modules extends CI_Controller {
         }
     }
 
-    public function update_point($p) {
+    public function update_point() {
 
+        $p = $this->session->userdata('points');
         $points = $p - 1;
         $form_data = array('points' => $points);
         $this->admin_model->Update($this->user_id, $form_data, 'user_id', $this->customer_table);
@@ -151,6 +152,9 @@ class Modules extends CI_Controller {
     public function get_result() {
 
         $test_id = $this->session->userdata('test_id');
+        if (!is_admin()) {
+            $this->update_point();
+        }
 
         if ($test_id == '') {
             echo 10;
@@ -167,14 +171,32 @@ class Modules extends CI_Controller {
         $data['score_cookies'] = (int) $xmlObj->data->average->firstView->score_cookies;
 
 //-------------------------------
-        $data['first_view_render'] = (int) $xmlObj->data->run[0]->firstView->render;
-        $data['repeat_view_render'] = (int) $xmlObj->data->run[0]->repeatView->render;
-        $data['first_fully_loaded'] = (int) $xmlObj->data->run[0]->firstView->fullyLoaded;
-        $data['repeat_fully_loaded'] = (int) $xmlObj->data->run[0]->repeatView->fullyLoaded;
-        $data['repeat_fully_loaded'] = (int) $xmlObj->data->run[0]->repeatView->fullyLoaded;
-        $data['repeat_fully_loaded'] = (int) $xmlObj->data->run[0]->repeatView->fullyLoaded;
-        $data['repeat_fully_loaded'] = (int) $xmlObj->data->run[0]->repeatView->fullyLoaded;
-//docTime
+        $data['first_view_render'] = (int) $xmlObj->data->average->firstView->render;
+        $data['repeat_view_render'] = (int) $xmlObj->data->average->repeatView->render;
+        
+        $data['first_loadTime'] = (int) $xmlObj->data->average->firstView->loadTime;
+        $data['repeat_loadTime'] = (int) $xmlObj->data->average->repeatView->loadTime;
+        
+        $data['first_fully_loaded'] = (int) $xmlObj->data->average->firstView->fullyLoaded;
+        $data['repeat_fully_loaded'] = (int) $xmlObj->data->average->repeatView->fullyLoaded;
+        
+         $data['first_domElements'] = (int) $xmlObj->data->average->firstView->domElements;
+         $data['repeat_domElements'] = (int) $xmlObj->data->average->repeatView->domElements;
+         
+         //----------------------------------error-----------
+         
+         $data['first_docTime'] = (int) $xmlObj->data->average->firstView->docTime;
+         $data['first_bytesOut'] = (int) $xmlObj->data->average->firstView->bytesOut;
+         $data['first_requestsDoc'] = (int) $xmlObj->data->average->firstView->requestsDoc;
+         $data['first_requests'] = (int) $xmlObj->data->average->firstView->requests;
+         
+         
+         $data['first_bytesIn'] = (int) $xmlObj->data->average->firstView->bytesIn;
+         $data['first_bytesInDoc'] = (int) $xmlObj->data->average->firstView->bytesInDoc;
+         
+         $data['first_fullyLoaded'] = (int) $xmlObj->data->average->firstView->fullyLoaded;
+
+//docTime loadTime domElements requestsDoc requests
 //-----------------------------------
 
         $data['score_keep_alive'] = (int) $xmlObj->data->average->firstView->{'score_keep-alive'};
@@ -201,17 +223,15 @@ class Modules extends CI_Controller {
         $pd = file_get_contents($page_speed);
         $json = json_decode($pd);
         $data['speed_score'] = $json->score;
-        $data['page_speed']=PageSpeedTreeHTML($pd);
+        $data['page_speed'] = PageSpeedTreeHTML($pd);
         //echo $page_speed;
         //print_r($json);
         //$this->PageSpeedTreeHTML($json);
         //print_r($json);
         //print($pd);
         //print_r(PageSpeedTreeHTML($pd));
-        
-        
-       $this->load->view('front/print_view', $data);
-       //$this->pdf($data);
+        //$this->load->view('front/print_view', $data);
+        $this->pdf($data);
     }
 
     public function xmlUrl($id) {
@@ -225,9 +245,6 @@ class Modules extends CI_Controller {
         return $xmlObj;
     }
 
-    public function convert_milli_seconds($milliseconds) {
-        return $milliseconds / 1000;
-    }
 
     function urlExists($url = NULL) {
 //        if ($url == NULL)
@@ -265,13 +282,14 @@ class Modules extends CI_Controller {
             $this->email->message('Hello,\n Thank you for analyzing your website. \n Please find the attached PDF report \n regards \n Page Test Team \n Verbat Technologies');
             $this->email->attach('./pdf/' . $this->session->userdata('test_id') . '.pdf');
 
-            $this->email->send();
+            if($this->email->send()){
+                
+                echo 200;
+            }
 
-            echo $this->email->print_debugger();
+            //echo $this->email->print_debugger();
         }
     }
-
-  
 
 }
 
