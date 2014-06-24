@@ -83,7 +83,7 @@ class Modules extends CI_Controller {
     function delete_customer($id) {
 
         $form_data = array('deleted' => '1');
-        if ($this->admin_model->Update($id, $form_data, 'customer_id', $this->customer_table) == TRUE) {// the information has therefore been successfully saved in the db
+        if ($this->admin_model->Update($id, $form_data, 'user_id', $this->customer_table) == TRUE) {// the information has therefore been successfully saved in the db
             $this->ci_alerts->set('success', 'Deleted Successfully');
             redirect('admin/customers');
 // or whatever logic needs to occur

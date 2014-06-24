@@ -1,4 +1,3 @@
-
 <?php
 if (isset($customer) && $customer->num_rows() > 0) {
     $row = $customer->row()
@@ -39,33 +38,54 @@ if (isset($customer) && $customer->num_rows() > 0) {
     </form>          
     <script>
         $("#points_add").keyup(function() {
-            do_math();
+            do_add();
         });
         $("#points_add").keydown(function() {
-            do_math();
+            do_add();
         });
         $("#points_remove").keydown(function() {
-            do_math();
+        
+       
+            do_sub();
         });
          $("#points_remove").keyup(function() {
-            do_math();
+         
+            do_sub();
         });
-        function do_math() {
+        function do_add() {
 
             var current_points = $("#points").val();
             var points_toadd = $("#points_add").val();
-            var points_tore = $("#points_remove").val();
-
+            
             var ta = parseInt(current_points) + parseInt(points_toadd);
 
 
             if (isNaN(ta) == true) {
                 var ta = current_points;
             }
-            //alert(points_tore);
-            if (points_tore !== '' && points_tore <= ta) {
-                var ta = parseInt(ta) - parseInt(points_tore);
+           
+            $('#points_total').val(ta);
+        }
+        
+        function do_sub() {
+
+            var current_points = $("#points").val();
+            var total = $('#points_total').val();
+            var points_tore = $("#points_remove").val();
+            
+            var ta = parseInt(current_points) - parseInt(points_tore);
+
+
+            if (isNaN(ta) == true) {
+                var ta = current_points;
             }
+            
+            if(ta < 0){
+            
+            var ta = current_points;
+            
+            }
+           
             $('#points_total').val(ta);
         }
     </script>

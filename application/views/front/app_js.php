@@ -1,4 +1,3 @@
-
 <script>
     function test_status() {
         $.ajax({
@@ -7,7 +6,7 @@
             //data: {postVar1: 'theValue1', postVar2: 'theValue2'},
             beforeSend: function() {
 
-                $('#footer_notes').text('still working on your request...');
+                $('#footer_notes').text('working on your request...');
             },
             success: function(data) {
                 // successful request; do something with the data
@@ -53,7 +52,7 @@
                     $('#footer_notes').text('Sorry some error occured, you will redirect to home');
 
                     setTimeout(function() {
-                        redirect();
+                       redirect();
                     }, 3000);
                 }
                 //status_checker(data)
@@ -68,7 +67,8 @@
     }
 
     function redirect() {
-        window.location.replace("<?php echo site_url(); ?>");
+        window.location.replace("<?php echo site_url('front/modules/report_sent'); ?>");
+        //alert('error');
     }
 
     function status_checker(stat) {
@@ -89,6 +89,9 @@
         else if (stat >= 400) {
             $('#footer_notes').empty();
             $('#footer_notes').text('Sorry some error occured, we are working on it.');
+            setTimeout(function() {
+                redirect();
+            }, 5000);
         } else if (stat == 20) {
             $('#footer_notes').empty();
             $('#footer_notes').text('Lost connection with server, we are re-trying..');
@@ -98,9 +101,15 @@
         } else if (stat == 20) {
             $('#footer_notes').empty();
             $('#footer_notes').text('Sorry some error occured, we are working on it.');
+             setTimeout(function() {
+                redirect();
+            }, 3000);
         } else {
             $('#footer_notes').empty();
             $('#footer_notes').text('Sorry some error occured, we are working on it.');
+             setTimeout(function() {
+                redirect();
+            }, 3000);
         }
     }
 

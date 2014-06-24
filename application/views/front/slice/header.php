@@ -68,14 +68,23 @@
                             <ul class="nav navbar-nav">
 
                                 <li class="dropdown active">
-                                    <a href="<?php echo site_url(); ?>" class="dropdown-toggle" data-toggle="dropdown">
+                                    <a href="<?php echo site_url(); ?>">
                                         <span class="visible-sm visible-md"><i class="fa fa-dashboard"></i></span>
                                         <span class="hidden-sm hidden-md">
                                             <span class="hidden-xs home_icon_nav"> <i class="fa fa-home"></i></span>Home
                                         </span>
                                     </a>
                                 </li>
-
+                                <?php if(is_admin()){?>
+                                <li class="dropdown">
+                                    <a href="<?php echo site_url('admin'); ?>">
+                                        <span class="visible-sm visible-md"><i class="fa fa-rocket"></i></span>
+                                        <span class="hidden-sm hidden-md">
+                                            <span class="hidden-xs home_icon_nav"> <i class="fa fa-rocket"></i></span>Dashboard
+                                        </span>
+                                    </a>
+                                </li>
+<?php } ?>
                             </ul>
                             
                             <div class="points_count">								  

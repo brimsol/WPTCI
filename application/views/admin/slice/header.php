@@ -95,6 +95,12 @@
                                 <i class="fa fa-user"></i> <span>Customers</span> 
                             </a>
                         </li>
+                        
+                         <li>
+                            <a href="<?php echo site_url(); ?>">
+                                <i class="fa fa-rocket"></i> <span>Back to Site</span> 
+                            </a>
+                        </li>
                          <!--
                            <li>
                             <a href="<?php echo site_url('admin/works'); ?>">

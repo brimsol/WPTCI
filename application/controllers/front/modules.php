@@ -127,6 +127,11 @@ class Modules extends CI_Controller {
         $this->load->view('front/app_js');
     }
 
+    public function report_sent() {
+        $this->ci_alerts->set('success', 'Please check you inbox for page test report.');
+        redirect(site_url('analyzer'));
+    }
+
     public function result_status() {
 
         $test_id = $this->session->userdata('test_id');
@@ -152,18 +157,18 @@ class Modules extends CI_Controller {
     public function get_result() {
 
         $test_id = $this->session->userdata('test_id');
-        if (!is_admin()) {
-            $this->update_point();
-        }
 
         if ($test_id == '') {
             echo 10;
             exit();
         }
-        $xmlFile = file_get_contents($this->xmlUrl . $test_id . '/');
+        
+        
+        $xmlFile = file_get_contents($this->xmlUrl . $test_id . '/?breakdown=1');
         $xmlObj = new SimpleXMLElement($xmlFile);
 
         $data['test_url'] = (string) $xmlObj->data[0]->testUrl;
+        $data['test_id'] = $test_id;
         $data['first_byte'] = (int) $xmlObj->data->average->firstView->TTFB;
         $data['score_cache'] = (int) $xmlObj->data->average->firstView->score_cache;
         $data['score_cdn'] = (int) $xmlObj->data->average->firstView->score_cdn;
@@ -173,28 +178,28 @@ class Modules extends CI_Controller {
 //-------------------------------
         $data['first_view_render'] = (int) $xmlObj->data->average->firstView->render;
         $data['repeat_view_render'] = (int) $xmlObj->data->average->repeatView->render;
-        
+
         $data['first_loadTime'] = (int) $xmlObj->data->average->firstView->loadTime;
         $data['repeat_loadTime'] = (int) $xmlObj->data->average->repeatView->loadTime;
-        
+
         $data['first_fully_loaded'] = (int) $xmlObj->data->average->firstView->fullyLoaded;
         $data['repeat_fully_loaded'] = (int) $xmlObj->data->average->repeatView->fullyLoaded;
-        
-         $data['first_domElements'] = (int) $xmlObj->data->average->firstView->domElements;
-         $data['repeat_domElements'] = (int) $xmlObj->data->average->repeatView->domElements;
-         
-         //----------------------------------error-----------
-         
-         $data['first_docTime'] = (int) $xmlObj->data->average->firstView->docTime;
-         $data['first_bytesOut'] = (int) $xmlObj->data->average->firstView->bytesOut;
-         $data['first_requestsDoc'] = (int) $xmlObj->data->average->firstView->requestsDoc;
-         $data['first_requests'] = (int) $xmlObj->data->average->firstView->requests;
-         
-         
-         $data['first_bytesIn'] = (int) $xmlObj->data->average->firstView->bytesIn;
-         $data['first_bytesInDoc'] = (int) $xmlObj->data->average->firstView->bytesInDoc;
-         
-         $data['first_fullyLoaded'] = (int) $xmlObj->data->average->firstView->fullyLoaded;
+
+        $data['first_domElements'] = (int) $xmlObj->data->average->firstView->domElements;
+        $data['repeat_domElements'] = (int) $xmlObj->data->average->repeatView->domElements;
+
+        //----------------------------------error-----------
+
+        $data['first_docTime'] = (int) $xmlObj->data->average->firstView->docTime;
+        $data['first_bytesOut'] = (int) $xmlObj->data->average->firstView->bytesOut;
+        $data['first_requestsDoc'] = (int) $xmlObj->data->average->firstView->requestsDoc;
+        $data['first_requests'] = (int) $xmlObj->data->average->firstView->requests;
+
+
+        $data['first_bytesIn'] = (int) $xmlObj->data->average->firstView->bytesIn;
+        $data['first_bytesInDoc'] = (int) $xmlObj->data->average->firstView->bytesInDoc;
+
+        $data['first_fullyLoaded'] = (int) $xmlObj->data->average->firstView->fullyLoaded;
 
 //docTime loadTime domElements requestsDoc requests
 //-----------------------------------
@@ -218,20 +223,52 @@ class Modules extends CI_Controller {
         $data['checklist_repeat'] = (string) $xmlObj->data->run->repeatView->images->checklist;
         $data['screenshot_repeat'] = (string) $xmlObj->data->run->repeatView->images->screenShot;
 
+        //Break down data first view Request
+        
+        $data['break_html_req'] = (int) $xmlObj->data->run->firstView->breakdown->html->requests;
+        $data['break_js_req'] = (int) $xmlObj->data->run->firstView->breakdown->js->requests;
+        $data['break_css_req'] = (int) $xmlObj->data->run->firstView->breakdown->css->requests;
+        $data['break_image_req'] = (int) $xmlObj->data->run->firstView->breakdown->image->requests;
+        $data['break_flash_req'] = (int) $xmlObj->data->run->firstView->breakdown->flash->requests;
+        $data['break_font_req'] = (int) $xmlObj->data->run->firstView->breakdown->font->requests;
+        $data['break_other_req'] = (int) $xmlObj->data->run->firstView->breakdown->other->requests;
+
+        $data['break_html_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->html->bytes;
+        $data['break_js_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->js->bytes;
+        $data['break_css_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->css->bytes;
+        $data['break_image_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->image->bytes;
+        $data['break_flash_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->flash->bytes;
+        $data['break_font_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->font->bytes;
+        $data['break_other_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->other->bytes;
+        
         $page_speed = (string) $xmlObj->data->run->firstView->rawData->PageSpeedData;
         //$this->PageSpeedTreeHTML($page_speed);
+        
+        $this->load->library('jpgraph');
+        $break_req_data = array( $data['break_html_req'],$data['break_js_req'],$data['break_css_req'],$data['break_image_req'],$data['break_flash_req'],$data['break_font_req'],$data['break_other_req']);
+        $break_req_graph = $this->jpgraph->piechart($break_req_data, 'Breakdown by MIME (Request)',$test_id.'req');
+
+        
+        $break_byt_data = array( $data['break_html_bytes'],$data['break_js_bytes'],$data['break_css_bytes'],$data['break_image_bytes'],$data['break_flash_bytes'],$data['break_font_bytes'],$data['break_other_bytes']);
+        $break_byt_graph = $this->jpgraph->piechart($break_byt_data, 'Breakdown by MIME(Bytes)',$test_id.'byt');
+
+        //exit();
+        
+        
+        
         $pd = file_get_contents($page_speed);
         $json = json_decode($pd);
         $data['speed_score'] = $json->score;
         $data['page_speed'] = PageSpeedTreeHTML($pd);
+ 
         //echo $page_speed;
         //print_r($json);
         //$this->PageSpeedTreeHTML($json);
         //print_r($json);
         //print($pd);
         //print_r(PageSpeedTreeHTML($pd));
-        //$this->load->view('front/print_view', $data);
-        $this->pdf($data);
+        $this->load->view('front/print_view', $data);
+        //$this->pdf($data);
     }
 
     public function xmlUrl($id) {
@@ -244,7 +281,6 @@ class Modules extends CI_Controller {
         $xmlObj = new SimpleXMLElement($xmlFile);
         return $xmlObj;
     }
-
 
     function urlExists($url = NULL) {
 //        if ($url == NULL)
@@ -273,22 +309,84 @@ class Modules extends CI_Controller {
         $pdf_data = pdf_create($html, '', false);
         if (write_file('./pdf/' . $this->session->userdata('test_id') . '.pdf', $pdf_data)) {
             $this->load->library('email');
+            $config['protocol'] = 'smtp';
+            $config['smtp_host'] = 'mail.demoworks.be';
+            $config['smtp_user'] = 'pagetest@demoworks.be';
+            $config['smtp_pass'] = 'Techno#logy123';
+            $config['mailtype'] = 'html';
 
-            $this->email->from('pagetest@verbat.com', 'Page Test Report - Verbat Technologies');
+            $this->email->initialize($config);
+
+            $this->email->from('pagetest@demoworks.be', 'Page Test Report - Verbat Technologies');
             $this->email->to($this->session->userdata('email_send'));
-            $this->email->bcc('aravind.m@verbat.com');
+            $this->email->bcc('miaravindh@gmail.com');
 
             $this->email->subject('Page Test Report');
-            $this->email->message('Hello,\n Thank you for analyzing your website. \n Please find the attached PDF report \n regards \n Page Test Team \n Verbat Technologies');
+
+
+            /* EMAIL TEMPLATE BEGINS */
+
+            $imgSrc = 'http://www.verbat.com/in/images/logo.gif'; // Change image src to your site specific settings
+            $imgDesc = 'Verbat Logo'; // Change Alt tag/image Description to your site specific settings
+            $imgTitle = 'Verbat Logo'; // Change Alt Title tag/image title to your site specific settings
+
+            /*
+              Change your message body in the given $subjectPara variables.
+              $subjectPara1 means 'first paragraph in message body', $subjectPara2 means'first paragraph in message body',
+              if you don't want more than 1 para, just put NULL in unused $subjectPara variables.
+             */
+            $subjectPara1 = 'Hello there,';
+            $subjectPara2 = 'Thank you for taking webpage test.';
+            $subjectPara3 = 'Please find the attached report document in pdf format.';
+            $subjectPara4 = 'Regards,';
+            $subjectPara5 = 'Page Test Team';
+
+            $message = '<!DOCTYPE HTML>' .
+                    '<head>' .
+                    '<meta http-equiv="content-type" content="text/html">' .
+                    '<title>Email notification</title>' .
+                    '</head>' .
+                    '<body>' .
+                    '<div id="header" style="width: 80%;height: 60px;margin: 0 auto;padding: 10px;color: #fff;text-align: center;background-color: #E0E0E0;font-family: Open Sans,Arial,sans-serif;">' .
+                    '<img height="50" width="220" style="border-width:0" src="' . $imgSrc . '" alt="' . $imgDesc . '" title="' . $imgTitle . '">' .
+                    '</div>' .
+                    '<div id="outer" style="width: 80%;margin: 0 auto;margin-top: 10px;">' .
+                    '<div id="inner" style="width: 78%;margin: 0 auto;background-color: #fff;font-family: Open Sans,Arial,sans-serif;font-size: 13px;font-weight: normal;line-height: 1.4em;color: #444;margin-top: 10px;">' .
+                    '<p>' . $subjectPara1 . '</p>' .
+                    '<p>' . $subjectPara2 . '</p>' .
+                    '<p>' . $subjectPara3 . '</p>' .
+                    '<p>' . $subjectPara4 . '</p>' .
+                    '<p>' . $subjectPara5 . '</p>' .
+                    '</div>' .
+                    '</div>' .
+                    '<div id="footer" style="width: 80%;height: 40px;margin: 0 auto;text-align: center;padding: 10px;font-family: Verdena;background-color: #E2E2E2;">' .
+                    '' .
+                    '</div>' .
+                    '</body>';
+
+            /* EMAIL TEMPLATE ENDS */
+
+
+
+
+            $this->email->message($message);
             $this->email->attach('./pdf/' . $this->session->userdata('test_id') . '.pdf');
 
-            if($this->email->send()){
-                
-                echo 200;
-            }
+//            if ($this->email->send()) {
+//                if (!is_admin()) {
+//                    $this->update_point();
+//                }
+//
+//                echo 200;
+//            }
 
             //echo $this->email->print_debugger();
         }
+    }
+
+    public function down() {
+
+        echo "<center><img src='" . base_url() . "/assets/front/img/down.png'/></center>";
     }
 
 }

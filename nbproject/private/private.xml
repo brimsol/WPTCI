@@ -3,19 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/codes/pagetest/application/controllers/admin/auth.php</file>
-            <file>file:/E:/codes/pagetest/application/views/front/slice/header.php</file>
-            <file>file:/E:/codes/pagetest/application/helpers/dompdf/dompdf_config.inc.php</file>
-            <file>file:/E:/codes/pagetest/application/models/admin_model.php</file>
-            <file>file:/E:/codes/pagetest/application/controllers/admin/modules.php</file>
-            <file>file:/E:/codes/pagetest/application/views/front/scaning_view.php</file>
-            <file>file:/E:/codes/pagetest/application/views/front/print_view.php</file>
             <file>file:/E:/codes/pagetest/application/helpers/common_helper.php</file>
-            <file>file:/E:/codes/pagetest/application/helpers/dompdf_helper.php</file>
-            <file>file:/E:/codes/pagetest/application/views/admin/login_view.php</file>
-            <file>file:/E:/codes/pagetest/application/views/admin/customers/add_view.php</file>
+            <file>file:/E:/codes/pagetest/application/views/front/print_view.php</file>
             <file>file:/E:/codes/pagetest/application/controllers/front/modules.php</file>
-            <file>file:/E:/codes/pagetest/application/controllers/front/auth.php</file>
+            <file>file:/E:/codes/pagetest/application/views/front/app_js.php</file>
         </group>
     </open-files>
 </project-private>
