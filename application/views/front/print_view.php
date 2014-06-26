@@ -55,7 +55,7 @@
                 font-size:0;
             }
             #container{
-                width:19cm;
+                width:auto;
                 padding: 0px 25px 25px 25px;
                 background-color: #FFF;
             }
@@ -247,6 +247,13 @@
                 padding:5px;
                 font-size:16px;
             }
+            .page-break{
+                page-break-after: always;
+            }
+
+            @media print {
+                .page-break {page-break-after: always;}
+            }
         </style>
     </head>
     <body>
@@ -366,6 +373,7 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $thumbnail; ?>" alt="Google" width="232px" height="180px" style="border:2px solid silver">
                 </td>
             </tr>
+
             <tr>
                 <td colspan="2"><div class="heading_text">Summary</div></td>
             </tr>
@@ -413,8 +421,7 @@
 
                 </td>
             </tr>
-
-
+            <div class="page-break"></div>
             <tr>
                 <td colspan="2"><div class="heading_text">Waterfall View</div></td>
             </tr>
@@ -441,7 +448,7 @@
     </tr>
     <tr>
         <td>
-            <?php echo $page_speed; ?>
+            <?php //echo $page_speed; ?>
         </td>
     </tr>
 
@@ -494,34 +501,34 @@
 
             <tr>
                 <td class="table_sec_ftd">First Byte Time (back-end processing)</td>
-                <td><?php echo $first_byte ;?> Milli.Sec</td>
+                <td><?php echo $first_byte; ?> Milli.Sec</td>
             </tr>
-             <tr>
+            <tr>
                 <td class="table_sec_ftd">Use persistent connections (keep alive)</td>
-                <td><?php echo $score_keep_alive  ;?>/100</td>
+                <td><?php echo $score_keep_alive; ?>/100</td>
             </tr>
-             <tr>
+            <tr>
                 <td class="table_sec_ftd">Use gzip compression for transferring compressable responses</td>
-                <td><?php echo $score_gzip ;?>/100</td>
+                <td><?php echo $score_gzip; ?>/100</td>
             </tr>
-            
-             <tr>
+
+            <tr>
                 <td class="table_sec_ftd">Compress Images</td>
-                <td><?php echo $score_compress ;?>/100</td>
+                <td><?php echo $score_compress; ?>/100</td>
             </tr>
-            
-             <tr>
+
+            <tr>
                 <td class="table_sec_ftd">Use Progressive JPEGs</td>
-                <td><?php echo $score_compress ;?>/100</td>
+                <td><?php echo $score_compress; ?>/100</td>
             </tr>
-            
+
             <tr>
                 <td class="table_sec_ftd">Leverage browser caching of static assets</td>
-                <td><?php echo $score_cache ;?>/100</td>
+                <td><?php echo $score_cache; ?>/100</td>
             </tr>
             <tr>
                 <td class="table_sec_ftd">Use a CDN for all static assets</td>
-                <td><?php echo $score_cdn ;?>/100</td>
+                <td><?php echo $score_cdn; ?>/100</td>
             </tr>
         </table>
 
@@ -535,88 +542,88 @@
     <td colspan="2" width="700px">
 
 
-        <table border="1" cellpadding="1px" cellspacing="0" style="width:100%">
+        <table cellspacing="0" style="width:100%">
 
-            <tbody><tr><th rowspan="2" colspan="1">First Byte Time</th>
-                    <td >Applicable Objects</td>
-                    <td>Time to First Byte for the page (back-end processing + redirects)</td>
-                </tr>
-                <tr>
-                    <td>What is checked</td>
-                    <td>The target time is the time needed for the DNS, socket and SSL negotiations + 100ms.  A single letter grade will be deducted for every 100ms beyond the target.</td>
-                </tr>
+            <tr><th >First Byte Time</th>
+                <td >Applicable Objects</td>
+                <td>Time to First Byte for the page (back-end processing + redirects)</td>
+            </tr>
+            <tr>
+                <td>What is checked</td>
+                <td>The target time is the time needed for the DNS, socket and SSL negotiations + 100ms.  A single letter grade will be deducted for every 100ms beyond the target.</td>
+            </tr>
 
-                <tr></tr>
-                <tr><th rowspan="2" colspan="1">Keep-Alive</th>
-                    <td>Applicable Objects</td>
-                    <td>All objects that are from a domain that serves more than one object for the page (i.e. if only a single object is served from a given domain it will not be checked)</td>
-                </tr>
-                <tr>
-                    <td>What is checked</td>
-                    <td>The response header contains a "keep-alive" directive or the same socket was used for more than one object from the given host</td>
-                </tr>
+            <tr></tr>
+            <tr><th>Keep-Alive</th>
+                <td>Applicable Objects</td>
+                <td>All objects that are from a domain that serves more than one object for the page (i.e. if only a single object is served from a given domain it will not be checked)</td>
+            </tr>
+            <tr>
+                <td>What is checked</td>
+                <td>The response header contains a "keep-alive" directive or the same socket was used for more than one object from the given host</td>
+            </tr>
 
-                <tr></tr>
-                <tr><th rowspan="2" colspan="1">GZIP Text</th>
-                    <td>Applicable Objects</td>
-                    <td>All objects with a mime type of "text/*" or "*javascript*"</td>
-                </tr>
-                <tr>
-                    <td>What is checked</td>
-                    <td>Transfer-encoding is checked to see if it is gzip.  If it is not then the file is compressed and the percentage of compression 
-                        is the result (so a page that can save 30% of the size of it's text by compressing would yield a 70% test result)</td>
-                </tr>
+            <tr></tr>
+            <tr><th>GZIP Text</th>
+                <td>Applicable Objects</td>
+                <td>All objects with a mime type of "text/*" or "*javascript*"</td>
+            </tr>
+            <tr>
+                <td>What is checked</td>
+                <td>Transfer-encoding is checked to see if it is gzip.  If it is not then the file is compressed and the percentage of compression 
+                    is the result (so a page that can save 30% of the size of it's text by compressing would yield a 70% test result)</td>
+            </tr>
 
-                <tr></tr>
-                <tr><th rowspan="2" colspan="1">Compress Images</th>
-                    <td>Applicable Objects</td>
-                    <td>JPEG Images</td>
-                </tr>
-                <tr>
-                    <td>What is checked</td>
-                    <td>Within 10% of a photoshop quality 50 will pass, up to 50% larger will warn and anything larger than that will fail.<br>
-                        The overall score is the percentage of image bytes that can be saved by re-compressing the images.                        
-                    </td>
-                </tr>
+            <tr></tr>
+            <tr><th>Compress Images</th>
+                <td>Applicable Objects</td>
+                <td>JPEG Images</td>
+            </tr>
+            <tr>
+                <td>What is checked</td>
+                <td>Within 10% of a photoshop quality 50 will pass, up to 50% larger will warn and anything larger than that will fail.<br>
+                    The overall score is the percentage of image bytes that can be saved by re-compressing the images.                        
+                </td>
+            </tr>
 
-                <tr></tr>
-                <tr><th rowspan="2" colspan="1">Use Progressive JPEGs</th>
-                    <td>Applicable Objects</td>
-                    <td>All JPEG Images</td>
-                </tr>
-                <tr>
-                    <td>What is checked</td>
-                    <td>Each JPEG image is checked and the resulting score is the percentage of JPEG bytes that were served as progressive images relative to the total JPEG bytes.</td>
-                </tr>
+            <tr></tr>
+            <tr><th>Use Progressive JPEGs</th>
+                <td>Applicable Objects</td>
+                <td>All JPEG Images</td>
+            </tr>
+            <tr>
+                <td>What is checked</td>
+                <td>Each JPEG image is checked and the resulting score is the percentage of JPEG bytes that were served as progressive images relative to the total JPEG bytes.</td>
+            </tr>
 
-                <tr></tr>
-                <tr><th rowspan="2" colspan="1">Cache Static</th>
-                    <td>Applicable Objects</td>
-                    <td>Any non-html object with a mime type of "text/*", "*javascript*" or "image/*" that does not
-                        explicitly have an Expires header of 0 or -1, a cache-control header of "private",
-                        "no-store" or "no-cache" or a pragma header of "no-cache"</td>
-                </tr>
-                <tr>
-                    <td>What is checked</td>
-                    <td>
-                        An "Expires" header is present (and is not 0 or -1) or a 
-                        "cache-control: max-age" directive is present and set for an 
-                        hour or greater.  If the expiration is set for less than 30 
-                        days you will get a warning (only applies to max-age currently).
-                    </td>
-                </tr>
+            <tr></tr>
+            <tr><th >Cache Static</th>
+                <td>Applicable Objects</td>
+                <td>Any non-html object with a mime type of "text/*", "*javascript*" or "image/*" that does not
+                    explicitly have an Expires header of 0 or -1, a cache-control header of "private",
+                    "no-store" or "no-cache" or a pragma header of "no-cache"</td>
+            </tr>
+            <tr>
+                <td>What is checked</td>
+                <td>
+                    An "Expires" header is present (and is not 0 or -1) or a 
+                    "cache-control: max-age" directive is present and set for an 
+                    hour or greater.  If the expiration is set for less than 30 
+                    days you will get a warning (only applies to max-age currently).
+                </td>
+            </tr>
 
-                <tr class="blank"></tr>
-                <tr><th rowspan="2" colspan="1">Use A CDN</th>
-                    <td>Applicable Objects</td>
-                    <td>All static non-html content (css, js and images)</td>
-                </tr>
-                <tr>
-                    <td>What is checked</td>
-                    <td>Checked to see if it is hosted on a known CDN (CNAME mapped to a known CDN network).  80% of the static resources need to be served from a CDN for the overall page to be considered using a CDN. The current list of known CDN's is <a href="http://webpagetest.googlecode.com/svn/trunk/agent/wpthook/cdn.h">here</a></td>
-                </tr>
 
-            </tbody></table>
+            <tr><th>Use A CDN</th>
+                <td>Applicable Objects</td>
+                <td>All static non-html content (css, js and images)</td>
+            </tr>
+            <tr>
+                <td>What is checked</td>
+                <td>Checked to see if it is hosted on a known CDN (CNAME mapped to a known CDN network).  80% of the static resources need to be served from a CDN for the overall page to be considered using a CDN. The current list of known CDN's is <a href="http://webpagetest.googlecode.com/svn/trunk/agent/wpthook/cdn.h">here</a></td>
+            </tr>
+
+        </table>
 
 
     </td>
@@ -743,10 +750,12 @@
 
 
 <tr>
-    <td colspan="2"><div class="header_border">Report generated @ <?php echo date("m-d-Y");
-            ; ?></div></td>
+    <td colspan="2"><div class="header_border">Report generated @ <?php
+            echo date("m-d-Y");
+            ;
+            ?></div></td>
 </tr>
-<tr>
+
 
 </table><!--container-->
 
