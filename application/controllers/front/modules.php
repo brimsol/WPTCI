@@ -164,124 +164,13 @@ class Modules extends CI_Controller {
         }
 
 
-        $xmlFile = file_get_contents($this->xmlUrl . $test_id . '/?breakdown=1');
-        $xmlObj = new SimpleXMLElement($xmlFile);
+        $xmlFile = file_get_contents($this->xmlUrl . $test_id . '/?breakdown=1&domains=1');
 
-        $data['test_url'] = (string) $xmlObj->data[0]->testUrl;
-        $data['test_id'] = $test_id;
-        $data['first_byte'] = (int) $xmlObj->data->average->firstView->TTFB;
-        $data['score_cache'] = (int) $xmlObj->data->average->firstView->score_cache;
-        $data['score_cdn'] = (int) $xmlObj->data->average->firstView->score_cdn;
-        $data['score_gzip'] = (int) $xmlObj->data->average->firstView->score_gzip;
-        $data['score_cookies'] = (int) $xmlObj->data->average->firstView->score_cookies;
-
-//-------------------------------
-        $data['first_view_render'] = (int) $xmlObj->data->average->firstView->render;
-        $data['repeat_view_render'] = (int) $xmlObj->data->average->repeatView->render;
-
-        $data['first_loadTime'] = (int) $xmlObj->data->average->firstView->loadTime;
-        $data['repeat_loadTime'] = (int) $xmlObj->data->average->repeatView->loadTime;
-
-        $data['first_fully_loaded'] = (int) $xmlObj->data->average->firstView->fullyLoaded;
-        $data['repeat_fully_loaded'] = (int) $xmlObj->data->average->repeatView->fullyLoaded;
-
-        $data['first_domElements'] = (int) $xmlObj->data->average->firstView->domElements;
-        $data['repeat_domElements'] = (int) $xmlObj->data->average->repeatView->domElements;
-
-        //----------------------------------error-----------
-
-        $data['first_docTime'] = (int) $xmlObj->data->average->firstView->docTime;
-        $data['first_bytesOut'] = (int) $xmlObj->data->average->firstView->bytesOut;
-        $data['first_requestsDoc'] = (int) $xmlObj->data->average->firstView->requestsDoc;
-        $data['first_requests'] = (int) $xmlObj->data->average->firstView->requests;
-
-
-        $data['first_bytesIn'] = (int) $xmlObj->data->average->firstView->bytesIn;
-        $data['first_bytesInDoc'] = (int) $xmlObj->data->average->firstView->bytesInDoc;
-
-        $data['first_fullyLoaded'] = (int) $xmlObj->data->average->firstView->fullyLoaded;
-
-//docTime loadTime domElements requestsDoc requests
-//-----------------------------------
-
-        $data['score_keep_alive'] = (int) $xmlObj->data->average->firstView->{'score_keep-alive'};
-        $data['score_minify'] = (int) $xmlObj->data->average->firstView->score_minify;
-        $data['score_combine'] = (int) $xmlObj->data->average->firstView->score_combine;
-
-        $data['score_compress'] = (int) $xmlObj->data->average->firstView->score_compress;
-        $data['score_etags'] = (int) $xmlObj->data->average->firstView->score_etags;
-
-        $data['thumbnail'] = (string) $xmlObj->data->run->firstView->thumbnails->screenShot;
-
-        $data['waterfall'] = (string) $xmlObj->data->run->firstView->images->waterfall;
-        $data['connection_view'] = (string) $xmlObj->data->run->firstView->images->connectionView;
-        $data['checklist'] = (string) $xmlObj->data->run->firstView->images->checklist;
-        $data['screenshot'] = (string) $xmlObj->data->run->firstView->images->screenShot;
-
-        $data['waterfall_repeat'] = (string) $xmlObj->data->run->repeatView->images->waterfall;
-        $data['connection_view_repeat'] = (string) $xmlObj->data->run->repeatView->images->connectionView;
-        $data['checklist_repeat'] = (string) $xmlObj->data->run->repeatView->images->checklist;
-        $data['screenshot_repeat'] = (string) $xmlObj->data->run->repeatView->images->screenShot;
-
-        //Break down data first view Request
-
-        $data['break_html_req'] = (int) $xmlObj->data->run->firstView->breakdown->html->requests;
-        $data['break_js_req'] = (int) $xmlObj->data->run->firstView->breakdown->js->requests;
-        $data['break_css_req'] = (int) $xmlObj->data->run->firstView->breakdown->css->requests;
-        $data['break_image_req'] = (int) $xmlObj->data->run->firstView->breakdown->image->requests;
-        $data['break_flash_req'] = (int) $xmlObj->data->run->firstView->breakdown->flash->requests;
-        $data['break_font_req'] = (int) $xmlObj->data->run->firstView->breakdown->font->requests;
-        $data['break_other_req'] = (int) $xmlObj->data->run->firstView->breakdown->other->requests;
-
-        $data['break_html_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->html->bytes;
-        $data['break_js_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->js->bytes;
-        $data['break_css_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->css->bytes;
-        $data['break_image_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->image->bytes;
-        $data['break_flash_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->flash->bytes;
-        $data['break_font_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->font->bytes;
-        $data['break_other_bytes'] = (int) $xmlObj->data->run->firstView->breakdown->other->bytes;
-
-        $page_speed = (string) $xmlObj->data->run->firstView->rawData->PageSpeedData;
-        //$this->PageSpeedTreeHTML($page_speed);
-
-        $this->load->library('jpgraph');
-        $break_req_data = array($data['break_html_req'], $data['break_js_req'], $data['break_css_req'], $data['break_image_req'], $data['break_flash_req'], $data['break_font_req'], $data['break_other_req']);
-        $break_req_graph = $this->jpgraph->piechart($break_req_data, 'Breakdown by MIME (Request)', $test_id . 'req');
-
-
-        $break_byt_data = array($data['break_html_bytes'], $data['break_js_bytes'], $data['break_css_bytes'], $data['break_image_bytes'], $data['break_flash_bytes'], $data['break_font_bytes'], $data['break_other_bytes']);
-        $break_byt_graph = $this->jpgraph->piechart($break_byt_data, 'Breakdown by MIME(Bytes)', $test_id . 'byt');
-
-        //exit();
-
-
-
-        $pd = file_get_contents($page_speed);
-        $json = json_decode($pd);
-        $data['speed_score'] = $json->score;
-        $data['page_speed'] = PageSpeedTreeHTML($pd);
-
-        //echo $page_speed;
-        //print_r($json);
-        //$this->PageSpeedTreeHTML($json);
-        //print_r($json);
-        //print($pd);
-        //print_r(PageSpeedTreeHTML($pd));
-        //$this->load->view('front/print_summary_view', $data);
-        $this->fpdf($data);
-    }
-
-    public function get_result_test() {
-
-        $test_id = $this->session->userdata('test_id');
-
-        if ($test_id == '') {
+        if ($xmlFile == '') {
             echo 10;
             exit();
         }
 
-
-        $xmlFile = file_get_contents($this->xmlUrl . $test_id . '/?breakdown=1');
         $xmlObj = new SimpleXMLElement($xmlFile);
 
         $data['test_url'] = (string) $xmlObj->data[0]->testUrl;
@@ -361,19 +250,39 @@ class Modules extends CI_Controller {
         $page_speed = (string) $xmlObj->data->run->firstView->rawData->PageSpeedData;
         //$this->PageSpeedTreeHTML($page_speed);
 
-        $this->load->library('jpgraph');
-        $break_req_data = array($data['break_html_req'], $data['break_js_req'], $data['break_css_req'], $data['break_image_req'], $data['break_flash_req'], $data['break_font_req'], $data['break_other_req']);
-        $break_req_graph = $this->jpgraph->piechart($break_req_data, 'Breakdown by MIME (Request)', $test_id . 'req');
+        $data['domain_host'] = $xmlObj->data->run->firstView->domains;
+        $host = "";
+        $req = "";
+        $byt = "";
+        $con = "";
+        foreach ($xmlObj->data->run->firstView->domains->children() as $sec_gen) {
+
+            $host .=$sec_gen['host'] . '|';
+            $req .=$sec_gen->requests . ',';
+            $byt .=$sec_gen->bytes . ',';
+            $con .=$sec_gen->connections . ',';
+        }
+        $data['dom_host'] = substr($host, 0, strlen($host) - 1);
+        $data['dom_req'] = substr($req, 0, strlen($req) - 1);
+        $data['dom_byt'] = substr($byt, 0, strlen($byt) - 1);
+        $data['dom_con'] = substr($con, 0, strlen($con) - 1);
 
 
-        $break_byt_data = array($data['break_html_bytes'], $data['break_js_bytes'], $data['break_css_bytes'], $data['break_image_bytes'], $data['break_flash_bytes'], $data['break_font_bytes'], $data['break_other_bytes']);
-        $break_byt_graph = $this->jpgraph->piechart($break_byt_data, 'Breakdown by MIME(Bytes)', $test_id . 'byt');
-
+        //$this->load->library('jpgraph');
+        //$break_req_data = array($data['break_html_req'], $data['break_js_req'], $data['break_css_req'], $data['break_image_req'], $data['break_flash_req'], $data['break_font_req'], $data['break_other_req']);
+        //$break_req_graph = $this->jpgraph->piechart($break_req_data, 'Breakdown by MIME (Request)', $test_id . 'req');
+        //$break_byt_data = array($data['break_html_bytes'], $data['break_js_bytes'], $data['break_css_bytes'], $data['break_image_bytes'], $data['break_flash_bytes'], $data['break_font_bytes'], $data['break_other_bytes']);
+        //$break_byt_graph = $this->jpgraph->piechart($break_byt_data, 'Breakdown by MIME(Bytes)', $test_id . 'byt');
         //exit();
 
 
 
         $pd = file_get_contents($page_speed);
+        if ($pd == '') {
+            echo 10;
+            exit();
+        }
+
         $json = json_decode($pd);
         $data['speed_score'] = $json->score;
         $data['page_speed'] = PageSpeedTreeHTML($pd);
@@ -384,19 +293,15 @@ class Modules extends CI_Controller {
         //print_r($json);
         //print($pd);
         //print_r(PageSpeedTreeHTML($pd));
-        $this->load->view('front/print_summary_view', $data);
-        //$this->tpdf($data);
+        //$this->load->view('front/print_domain_view', $data);
+        $this->pdf($data);
     }
 
-    public function xmlUrl($id) {
-        $baseUrl = "http://www.webpagetest.org/xmlResult/";
-        return $baseUrl . $id . "/";
-    }
+    function xml2array($xmlObject, $out = array()) {
+        foreach ((array) $xmlObject as $index => $node)
+            $out[$index] = ( is_object($node) ) ? xml2array($node) : $node;
 
-    public function fetchXmlResults($id) {
-        $xmlFile = file_get_contents($this->xmlUrl($id));
-        $xmlObj = new SimpleXMLElement($xmlFile);
-        return $xmlObj;
+        return $out;
     }
 
     function urlExists($url = NULL) {
@@ -418,31 +323,17 @@ class Modules extends CI_Controller {
 //        }
     }
 
-    function fpdf($data) {
-
-        $this->load->library('myfpdf');
-        $pdf = new MYFPDF();
-        $pdf->AddPage();
-        $pdf->SetFont('Helvetica', 'B', 24);
-        $pdf->Cell(0, 0, 'Fuck U','',1,'C');
-        $pdf->Cell(0, 10, 'Water Fall',1,1,'C');
-        $pdf->Image('http://chart.googleapis.com/chart?cht=p&chd=t:'.$data['break_html_req'].','.$data['break_js_req'].','.$data['break_css_req'].','.$data['break_image_req'].','.$data['break_flash_req'].','.$data['break_font_req'].','.$data['break_other_req'].'&chs=300x300&chdl=HTML|CSS|JS|IMAGE|FLASH|FONT|Others&chco=FF0000|00FF00|0000FF&chtt=Request',100,30,60,0,'PNG');
-        $pdf->Image('http://chart.googleapis.com/chart?cht=p&chd=t:'.$data['break_html_bytes'].','.$data['break_js_bytes'].','.$data['break_css_bytes'].','.$data['break_image_bytes'].','.$data['break_flash_bytes'].','.$data['break_font_bytes'].','.$data['break_other_bytes'].'&chs=300x300&chdl=HTML|CSS|JS|IMAGE|FLASH|FONT|Others&chco=FF0000|00FF00|0000FF&chtt=Bytes',20,30,60,0,'PNG');
-        $pdf->Output();
-    }
-
     function tpdf($data) {
         $this->load->library('mytcpdf');
-
         $pdf = new mytcpdf('P', 'mm', 'A4', true, 'UTF-8', false);
         // set document information
-        //$pdf->SetCreator(PDF_CREATOR);
-        //$pdf->SetAuthor('Nicola Asuni');
-        //$pdf->SetTitle('TCPDF Example 006');
-        //$pdf->SetSubject('TCPDF Tutorial');
-        //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Nicola Asuni');
+        $pdf->SetTitle('TCPDF Example 006');
+        $pdf->SetSubject('TCPDF Tutorial');
+        $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 // set default header data
-        $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE . ' 006', PDF_HEADER_STRING);
+        $pdf->SetHeaderData(base_url() . '/assets/front/img/logo.png', 222, 'Page Test' . ' 006', 'Executive Report');
 // set header and footer fonts
         $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
         $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -457,63 +348,125 @@ class Modules extends CI_Controller {
 // set image scale factor
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 // ---------------------------------------------------------
-// set font
-        $pdf->SetFont('dejavusans', '', 10);
-// add a page
-        $pdf->AddPage();
 
-// writeHTML($html, $ln=true, $fill=false, $reseth=false, $cell=false, $align='')
-// writeHTMLCell($w, $h, $x, $y, $html='', $border=0, $ln=0, $fill=0, $reseth=true, $align='', $autopadding=true)
-// create some HTML content
+        $pdf->SetFont('Helvetica', '', 10);
+        $pdf->AddPage();
         $html = $this->load->view('front/print_summary_view', $data, true);
-// output the HTML content
-        $pdf->writeHTML($html, true, true, true, false, 'center');
-// reset pointer to the last page
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
         $pdf->lastPage();
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// Print a table
-// add a page
-        $pdf->AddPage();
 
+
+        $pdf->AddPage();
         $html = $this->load->view('front/print_waterfall_view', $data, true);
-// output the HTML content
-        $pdf->writeHTML($html, true, false, true, false, '');
-// Print some HTML Cells
-
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
         $pdf->lastPage();
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// / - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// Print a table
-// add a page
-        $pdf->AddPage();
 
+        $pdf->AddPage();
         $html = $this->load->view('front/print_opt_view', $data, true);
-// output the HTML content
-        $pdf->writeHTML($html, true, false, true, false, '');
-// Print some HTML Cells
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
 
-        $pdf->lastPage();
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// Print a table
-// add a page
         $pdf->AddPage();
-// create some HTML content
-        $html = '<div style="width:100px;background-color:yello;">asdasd</div>';
-// output the HTML content
-// output the HTML content
-        $pdf->writeHTML($html, true, true, true, false, '');
-// reset pointer to the last page
+        $html = $this->load->view('front/print_connection_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
         $pdf->lastPage();
-//Close and output PDF document
+
+        $pdf->AddPage();
+        $html = $this->load->view('front/print_checklist_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
+
+
+        $pdf->AddPage();
+        $html = $this->load->view('front/print_gradedetails_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
+
+        $pdf->AddPage();
+        $html = $this->load->view('front/print_breakdown_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
+
         $pdf->Output('exampl.pdf', 'I');
     }
 
     function pdf($data) {
 
-        $this->load->helper('dompdf');
-        $html = $this->load->view('front/print_view', $data, true);
+        $this->load->library('mytcpdf');
+        $pdf = new mytcpdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Nicola Asuni');
+        $pdf->SetTitle('TCPDF Example 006');
+        $pdf->SetSubject('TCPDF Tutorial');
+        $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+// set default header data
+         $pdf->SetHeaderData('logo.png', 30, 'Page Test', 'Executive Report');
+// set header and footer fonts
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+// set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+// set margins
+        $pdf->SetMargins('10', PDF_MARGIN_TOP, '10');
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+// set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+// set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+// ---------------------------------------------------------
+
+        $pdf->SetFont('Helvetica', '', 10);
+        $pdf->AddPage();
+        $html = $this->load->view('front/print_summary_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
+
+
+        $pdf->AddPage();
+        $html = $this->load->view('front/print_waterfall_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
+
+        $pdf->AddPage();
+        $html = $this->load->view('front/print_opt_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
+
+        $pdf->AddPage();
+        $html = $this->load->view('front/print_connection_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
+
+        $pdf->AddPage();
+        $html = $this->load->view('front/print_checklist_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
+
+
+        $pdf->AddPage();
+        $html = $this->load->view('front/print_gradedetails_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
+
+        $pdf->AddPage();
+        $html = $this->load->view('front/print_breakdown_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
+
+        $pdf->AddPage();
+        $html = $this->load->view('front/print_domain_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
+
+        $pdf->AddPage();
+        $html = $this->load->view('front/print_screenshot_view', $data, true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->lastPage();
+
 //pdf_create($html, 'filename');
-        $pdf_data = pdf_create($html, '', false);
+        $pdf_data = $pdf->Output('', 's');
 
         if (write_file('./pdf/' . $this->session->userdata('test_id') . '.pdf', $pdf_data)) {
             $this->load->library('email');
@@ -574,24 +527,22 @@ class Modules extends CI_Controller {
 
             /* EMAIL TEMPLATE ENDS */
 
-
-
-
             $this->email->message($message);
             $this->email->attach('./pdf/' . $this->session->userdata('test_id') . '.pdf');
 
-//            if ($this->email->send()) {
-//                if (!is_admin()) {
-//                    $this->update_point();
-//                }
-//
-//                echo 200;
-//            }
+            if ($this->email->send()) {
+                if (!is_admin()) {
+                    $this->update_point();
+                }
+
+                echo 200;
+            }
             //echo $this->email->print_debugger();
         }
     }
 
-    public function down() {
+    public
+            function down() {
 
         echo "<center><img src='" . base_url() . "/assets/front/img/down.png'/></center>";
     }
@@ -599,4 +550,4 @@ class Modules extends CI_Controller {
 }
 
 /* End of file customers.php */
-/* Location: ./application/controllers/customers.php */
+    /* Location: ./application/controllers/customers.php */    

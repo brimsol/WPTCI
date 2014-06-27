@@ -24,7 +24,7 @@ class Jpgraph {
         $p1 = new PiePlot3D($data);
         $p1->ShowBorder();
         $p1->SetColor('black');
-        $p1->SetSliceColors(array('#1E90FF', '#2E8B57', '#ADFF2F', '#DC143C', '#BA55D3', '#4A2854', '#0431B4'));
+        $p1->SetSliceColors(array('#97BCEF', '#EDC393', '#ABD595', '#B899D3', '#42AAB1', '#E56354', '#BDBDBD'));
         $p1->ExplodeSlice(1);
 
         $graph->Add($p1);

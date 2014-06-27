@@ -45,7 +45,7 @@
                     $('#footer_notes').text('Report sent successfully, you will redirect to home');
 
                     setTimeout(function() {
-                        redirect();
+                        redirect_success();
                     }, 3000);
                 } else {
                     $('#footer_notes').empty();
@@ -66,8 +66,13 @@
         });
     }
 
-    function redirect() {
+    function redirect_success() {
         window.location.replace("<?php echo site_url('front/modules/report_sent'); ?>");
+        //alert('error');
+    }
+    
+    function redirect() {
+        window.location.replace("<?php echo site_url(); ?>");
         //alert('error');
     }
 

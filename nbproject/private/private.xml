@@ -3,11 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/E:/codes/pagetest/application/views/front/print_connection_view.php</file>
             <file>file:/E:/codes/pagetest/application/libraries/jpgraph.php</file>
-            <file>file:/E:/codes/pagetest/application/helpers/common_helper.php</file>
             <file>file:/E:/codes/pagetest/application/views/front/print_view.php</file>
+            <file>file:/E:/codes/pagetest/application/views/front/print_opt_view.php</file>
+            <file>file:/E:/codes/pagetest/application/views/front/print_checklist_view.php</file>
+            <file>file:/E:/codes/pagetest/application/views/front/print_waterfall_view.php</file>
+            <file>file:/E:/codes/pagetest/application/views/front/print_gradedetails_view.php</file>
+            <file>file:/E:/codes/pagetest/application/views/front/print_breakdown_view.php</file>
+            <file>file:/E:/codes/pagetest/application/libraries/tcpdf/tcpdf.php</file>
+            <file>file:/E:/codes/pagetest/application/views/front/print_screenshot_view.php</file>
+            <file>file:/E:/codes/pagetest/application/views/front/print_domain_view.php</file>
+            <file>file:/E:/codes/pagetest/application/views/front/print_summary_view.php</file>
             <file>file:/E:/codes/pagetest/application/controllers/front/modules.php</file>
-            <file>file:/E:/codes/pagetest/application/libraries/jpgraph/jpgraph_pie.php</file>
             <file>file:/E:/codes/pagetest/application/views/front/app_js.php</file>
         </group>
     </open-files>
